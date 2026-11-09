@@ -1,0 +1,56 @@
+name: release
+
+# Builds the plugin on our self-hosted runner (runner group "public", the repo
+# is public) and publishes RetakesPlugin.zip as a GitHub release. Only pushing
+# a tag or a manual run starts it - never a pull request, so code from forks
+# never runs on our machine.
+#
+# Server install: unpack into csgo/ (the zip contains addons/counterstrikesharp/...).
+# Latest version: https://github.com/OthersCantBeat/cs2-retakes/releases/latest/download/RetakesPlugin.zip
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag, e.g. v3.2.1 (created on the selected branch)'
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: self-hosted
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
+        # .NET SDK in a container, so the runner needs nothing but Docker.
+        run: |
+          rm -rf build-output
+          docker run --rm -v "$PWD":/src -w /src mcr.microsoft.com/dotnet/sdk:10.0 sh -c "
+            dotnet build RetakesPluginShared/RetakesPluginShared.csproj -c Release &&
+            dotnet build RetakesPlugin/RetakesPlugin.csproj -c Release &&
+            chown -R $(id -u):$(id -g) /src"
+          cp -r RetakesPlugin/map_config build-output/addons/counterstrikesharp/plugins/RetakesPlugin/
+          cp -r RetakesPlugin/lang build-output/addons/counterstrikesharp/plugins/RetakesPlugin/
+          python3 -c "import shutil; shutil.make_archive('RetakesPlugin', 'zip', 'build-output', 'addons')"
+          unzip -l RetakesPlugin.zip | tail -3
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" RetakesPlugin.zip --clobber
+          else
+            gh release create "$TAG" RetakesPlugin.zip --target "$GITHUB_SHA" --title "$TAG" --generate-notes --latest
+          fi

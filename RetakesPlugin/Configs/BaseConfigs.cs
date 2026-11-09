@@ -26,6 +26,9 @@ public class BaseConfigs : BasePluginConfig
     [JsonPropertyName("DebugSettings")]
     public DebugSettings Debug { get; set; } = new();
 
+    [JsonPropertyName("InsideRanks")]
+    public InsideRanksSettings InsideRanks { get; set; } = new();
+
     [JsonPropertyName("ConfigVersion")]
     public override int Version { get; set; } = 2;
 }

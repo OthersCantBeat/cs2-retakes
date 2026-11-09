@@ -137,6 +137,25 @@ To disable slot priority and immunity features, set both arrays to empty:
 |-------------|--------------------------------------------------------------|---------|-------|------|
 | IsDebugMode | Whether to enable debug output to the server console or not. | false   | false | true |
 
+### InsideRanks
+Reports raw stats to [OCB Inside](https://ocb.gg), which turns them into XP, a rank shared with our deathmatch servers ([CS2-Deathmatch](https://github.com/OthersCantBeat/CS2-Deathmatch)) and achievements. The plugin computes nothing itself: every `FlushSeconds` it sends what it counted and shows the rank Inside answers with as clan tag. Nothing counts during warmup.
+
+Counted per player (humans only): kills, deaths, headshots, knife kills, assists, damage, kill streaks, active seconds (alive and moved or dealt damage within `AfkSeconds`), rounds played and won, **clutches** (left alone against at least one enemy and the team wins), plants (only without auto plant), defuses and MVPs.
+
+| Config | Default | Description |
+| --- | --- | --- |
+| Enabled | false | Send stats to Inside. |
+| Url | https://gs.ocb.gg | Requests go to `{Url}/cs2/stats`, `/cs2/rank`, `/cs2/top`. |
+| ServerKey | "" | Key of this server from Inside (`ocbdm_…`). |
+| FlushSeconds / AfkSeconds | 60 / 20 | |
+| ShowClanTag / AnnounceRankUp | true / true | Rank as clan tag, chat on rank-ups and achievements. |
+| RankCommands / TopCommands | css_rank,css_ocbrank / css_top,css_ocbtop | `!rank`, `!top`. |
+| MaxPendingBatches | 50 | Batches kept while Inside is unreachable (also saved to `inside-pending.json` on unload). |
+| AdvertEnabled / AdvertIntervalSeconds | true / 300 | Chat advert (every 5 min and 15 s after joining) where players see their stats; works without `Enabled`. |
+| AdvertStatsUrl / AdvertApplyUrl | inside.ocb.gg / ocb.gg | |
+
+Releases (`RetakesPlugin.zip`, unpack into `csgo/`) are built by `.github/workflows/release.yml` on every `v*` tag: https://github.com/OthersCantBeat/cs2-retakes/releases/latest/download/RetakesPlugin.zip
+
 ### ConVars
 | ConVar          | Description                                                                                                                                                                                                                                     | Default |
 |-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|

@@ -22,5 +22,15 @@
   "retakes.teams.almost_scramble": "T đã thắng {green}{0}{default} round liên tiếp - nếu thắng thêm {green}{1}, {purple}đội sẽ bị xáo trộn.",
   "retakes.teams.win_streak": "T đang có chuỗi thắng {green}{0}{default} round!",
   "retakes.teams.win_streak_over": "CT đã kết thúc chuỗi thắng {green}{0}{default} round!",
-  "retakes.teams.admin_scramble": "{0} đã thiết lập xáo trộn đội ở round tiếp theo."
+  "retakes.teams.admin_scramble": "{0} đã thiết lập xáo trộn đội ở round tiếp theo.",
+
+  "retakes.inside.prefix": "[{green}OCB{default}]",
+  "retakes.inside.advert": "Your rank, stats and achievements: {green}{0}{default} (members) · {green}!rank{default} · {green}!top{default} · Not a member yet? Apply at {green}{1}{default}",
+  "retakes.inside.rank_up": "{green}{0}{default} reached the rank {gold}{1}{default}!",
+  "retakes.inside.milestone": "Achievement unlocked: {gold}{0}{default}",
+  "retakes.inside.rank": "Your rank: {gold}{0}{default} with {green}{1}{default} XP (place {blue}{2}{default})",
+  "retakes.inside.next_rank": "Next rank {gold}{0}{default} in {green}{1}{default} XP",
+  "retakes.inside.top_header": "Top 10 on the OCB CS2 servers:",
+  "retakes.inside.top_line": " {blue}{0}.{default} {green}{1}{default} {gold}{2}{default} ({3} XP)",
+  "retakes.inside.offline": "Ranks are not available right now, your stats are still counted."
 }

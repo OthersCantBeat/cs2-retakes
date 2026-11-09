@@ -25,7 +25,7 @@ namespace RetakesPlugin;
 [MinimumApiVersion(369)]
 public class RetakesPlugin : BasePlugin, IPluginConfig<BaseConfigs>
 {
-    public const string Version = "3.1.1";
+    public const string Version = "3.2.0";
 
     #region Plugin Info
     public override string ModuleName => "Retakes Plugin";
@@ -56,6 +56,7 @@ public class RetakesPlugin : BasePlugin, IPluginConfig<BaseConfigs>
     private AnnouncementService? _announcementService;
     private RoundEventHandlers? _roundEventHandlers;
     private PlayerEventHandlers? _playerEventHandlers;
+    private InsideRanksService? _insideRanks;
 
     public MapConfigService? MapConfigService => _mapConfigService;
     public SpawnManager? SpawnManager => _spawnManager;
@@ -136,6 +137,10 @@ public class RetakesPlugin : BasePlugin, IPluginConfig<BaseConfigs>
         RegisterEventHandler<EventBombDefused>(OnBombDefused);
         RegisterEventHandler<EventPlayerDisconnect>(OnPlayerDisconnect, HookMode.Pre);
         RegisterEventHandler<EventPlayerTeam>(OnPlayerTeam, HookMode.Pre);
+
+        // OCB Inside ranks + the stats advert; independent of the retakes logic.
+        _insideRanks = new InsideRanksService(this, Config.InsideRanks, Config.Bomb.IsAutoPlantEnabled);
+        _insideRanks.Load();
 
         if (hotReload)
         {
@@ -495,6 +500,7 @@ public class RetakesPlugin : BasePlugin, IPluginConfig<BaseConfigs>
     public override void Unload(bool hotReload)
     {
         Utils.Logger.LogInfo("Main", "Plugin unloading...");
+        _insideRanks?.Unload();
 
         if (!hotReload)
         {
